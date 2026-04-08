@@ -24,5 +24,10 @@ List<GameDto> games = [
         19.93M,
         new DateOnly(1992,7,15)),
 ];
-app.MapGet("/Games", () => games);
+
+// GET /Games
+app.MapGet("/games", () => games);
+
+// GET /Games/{id}
+app.MapGet("/games/{id}", (int id) => games.Find(game => game.Id == id));
 app.Run();
