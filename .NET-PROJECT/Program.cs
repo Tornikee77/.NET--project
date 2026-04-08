@@ -1,5 +1,8 @@
 using _NET_PROJECT.Dtos;
 
+const string GetGameEndpointName = "GetGame";
+
+
 var buiilder = WebApplication.CreateBuilder(args);  
 var app = buiilder.Build();
 
@@ -28,6 +31,21 @@ List<GameDto> games = [
 // GET /Games
 app.MapGet("/games", () => games);
 
+
 // GET /Games/{id}
-app.MapGet("/games/{id}", (int id) => games.Find(game => game.Id == id));
+app.MapGet("/games/{id}", (int id) => games.Find(game => game.Id == id)).WithName(GetGameEndpointName);
+
+// POST /Games
+app.MapPost("/games",(CreateGameDto newGame) =>
+{
+    GameDto game = new (
+        games.Count + 1,
+        newGame.Name,
+        newGame.Genre,
+        newGame.Price,
+        newGame.ReleaseDate
+    );
+    games.Add(game);
+    return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
+});
 app.Run();

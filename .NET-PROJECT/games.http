@@ -1,3 +1,13 @@
 GET http://localhost:5123/games
 
 GET http://localhost:5123/games/1
+
+POST http://localhost:5123/games
+Content-Type: application/json
+
+{
+    "name": "New Game",
+    "genre": "Action",
+    "price": 59.99,
+    "releaseDate": "2024-01-01" 
+}
