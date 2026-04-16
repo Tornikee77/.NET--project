@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-PROJECT\\.NET-PROJECT.csproj": {}
+    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-project\\.NET-PROJECT.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-PROJECT\\.NET-PROJECT.csproj": {
+    "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-project\\.NET-PROJECT.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-PROJECT\\.NET-PROJECT.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-project\\.NET-PROJECT.csproj",
         "projectName": ".NET-PROJECT",
-        "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-PROJECT\\.NET-PROJECT.csproj",
+        "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-project\\.NET-PROJECT.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-PROJECT\\obj\\",
+        "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\projects\\.NET- project\\.NET-project\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
