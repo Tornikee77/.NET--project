@@ -1,4 +1,6 @@
+using _NET_PROJECT.Data;
 using _NET_PROJECT.Dtos;
+using _NET_PROJECT.Models;
 
 namespace _NET_PROJECT.Endpoints;
 
@@ -27,20 +29,23 @@ public static class Gameendpoints
         // POST /Games
         group.MapPost(
             "/",
-            (CreateGameDto newGame) =>
+            (CreateGameDto newGame, GameStoreContext dbContext) =>
             {
-                if (string.IsNullOrEmpty(newGame.Name))
+                Game game = new()
                 {
-                    return Results.BadRequest("Name is required");
-                }
-                GameDto game = new(
-                    games.Count + 1,
-                    newGame.Name,
-                    newGame.Genre,
-                    newGame.Price,
-                    newGame.ReleaseDate
-                );
-                games.Add(game);
+                    Name = newGame.Name,
+
+                    GenreId = newGame.GenreId,
+
+                    Price = newGame.Price,
+
+                    ReleaseDate = newGame.ReleaseDate,
+                };
+
+                dbContext.Games.Add(game);
+
+                dbContext.SaveChanges();
+
                 return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
             }
         );
