@@ -66,7 +66,7 @@ public static class Gameendpoints
 
                     ReleaseDate = newGame.ReleaseDate,
                 };
-
+                Console.WriteLine($"DB PATH: {dbContext.Database.GetDbConnection().DataSource}");
                 dbContext.Games.Add(game);
 
                 await dbContext.SaveChangesAsync();
