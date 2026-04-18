@@ -46,7 +46,19 @@ public static class Gameendpoints
 
                 dbContext.SaveChanges();
 
-                return Results.CreatedAtRoute(GetGameEndpointName, new { id = game.Id }, game);
+                GameDetailsDto gameDto = new(
+                    game.Id,
+                    game.Name,
+                    game.GenreId,
+                    game.Price,
+                    game.ReleaseDate
+                );
+
+                return Results.CreatedAtRoute(
+                    GetGameEndpointName,
+                    new { id = gameDto.Id },
+                    gameDto
+                );
             }
         );
 
