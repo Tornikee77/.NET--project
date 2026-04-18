@@ -9,13 +9,6 @@ public static class Gameendpoints
 {
     const string GetGameEndpointName = "GetGame";
 
-    private static readonly List<GameDto> games =
-    [
-        new GameDto(1, "mlbb", 1, 19.91M, new DateOnly(1992, 7, 15)),
-        new GameDto(2, "Mortal Kombat", 2, 19.92M, new DateOnly(1992, 7, 15)),
-        new GameDto(3, "FiFA", 3, 19.93M, new DateOnly(1992, 7, 15)),
-    ];
-
     public static void MapGameEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/games");
@@ -23,9 +16,17 @@ public static class Gameendpoints
         group.MapGet(
             "/",
             async (GameStoreContext db) =>
-            {
-                return await db.Games.ToListAsync();
-            }
+                await db
+                    .Games.Include(game => game.Genre)
+                    .Select(game => new GameDto(
+                        game.Id,
+                        game.Name,
+                        game.GenreId,
+                        game.Price,
+                        game.ReleaseDate
+                    ))
+                    .AsNoTracking()
+                    .ToListAsync()
         );
 
         // GET /Games/{id}
@@ -89,17 +90,20 @@ public static class Gameendpoints
         // PUT /Games/{id}
         group.MapPut(
             "/{id}",
-            (int id, UpdateGameDto updateGame) =>
+            async (int id, UpdateGameDto dto, GameStoreContext db) =>
             {
-                var index = games.FindIndex(game => game.Id == id);
+                var game = await db.Games.FindAsync(id);
 
-                games[index] = new GameDto(
-                    id,
-                    updateGame.Name,
-                    updateGame.GenreId,
-                    updateGame.Price,
-                    updateGame.ReleaseDate
-                );
+                if (game is null)
+                    return Results.NotFound();
+
+                game.Name = dto.Name;
+                game.GenreId = dto.GenreId;
+                game.Price = dto.Price;
+                game.ReleaseDate = dto.ReleaseDate;
+
+                await db.SaveChangesAsync();
+
                 return Results.NoContent();
             }
         );
@@ -107,11 +111,16 @@ public static class Gameendpoints
         // DELETE /Games/{id}
         group.MapDelete(
             "/{id}",
-            (int id) =>
+            async (int id, GameStoreContext db) =>
             {
-                var index = games.FindIndex(game => game.Id == id);
+                var game = await db.Games.FindAsync(id);
 
-                _ = games.RemoveAll(game => game.Id == id);
+                if (game is null)
+                    return Results.NotFound();
+
+                db.Games.Remove(game);
+                await db.SaveChangesAsync();
+
                 return Results.NoContent();
             }
         );
