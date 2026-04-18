@@ -23,13 +23,20 @@ public static class Gameendpoints
 
         // GET /Games/{id}
         group
-            .MapGet("/{id}", (int id) => games.Find(game => game.Id == id))
-            .WithName(GetGameEndpointName);
+            .MapGet(
+                "/{id}",
+                (int id) =>
+                {
+                    var game = games.FirstOrDefault(game => game.Id == id);
 
+                    return game is not null ? Results.Ok(game) : Results.NotFound();
+                }
+            )
+            .WithName(GetGameEndpointName);
         // POST /Games
         group.MapPost(
             "/",
-            (CreateGameDto newGame, GameStoreContext dbContext) =>
+            async (CreateGameDto newGame, GameStoreContext dbContext) =>
             {
                 Game game = new()
                 {
@@ -44,7 +51,7 @@ public static class Gameendpoints
 
                 dbContext.Games.Add(game);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
 
                 GameDetailsDto gameDto = new(
                     game.Id,
