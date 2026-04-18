@@ -1,6 +1,7 @@
 using _NET_PROJECT.Data;
 using _NET_PROJECT.Dtos;
 using _NET_PROJECT.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace _NET_PROJECT.Endpoints;
 
@@ -10,26 +11,42 @@ public static class Gameendpoints
 
     private static readonly List<GameDto> games =
     [
-        new(1, "mlbb", "FARMING", 19.91M, new DateOnly(1992, 7, 15)),
-        new(2, "Mortal Kombat", "Fighting", 19.92M, new DateOnly(1992, 7, 15)),
-        new(3, "FiFA", "Football", 19.93M, new DateOnly(1992, 7, 15)),
+        new GameDto(1, "mlbb", 1, 19.91M, new DateOnly(1992, 7, 15)),
+        new GameDto(2, "Mortal Kombat", 2, 19.92M, new DateOnly(1992, 7, 15)),
+        new GameDto(3, "FiFA", 3, 19.93M, new DateOnly(1992, 7, 15)),
     ];
 
     public static void MapGameEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/games");
         // GET /Games
-        group.MapGet("/", () => games);
+        group.MapGet(
+            "/",
+            async (GameStoreContext db) =>
+            {
+                return await db.Games.ToListAsync();
+            }
+        );
 
         // GET /Games/{id}
         group
             .MapGet(
                 "/{id}",
-                (int id) =>
+                async (int id, GameStoreContext db) =>
                 {
-                    var game = games.FirstOrDefault(game => game.Id == id);
+                    var game = await db.Games.FindAsync(id);
 
-                    return game is not null ? Results.Ok(game) : Results.NotFound();
+                    return game is null
+                        ? Results.NotFound()
+                        : Results.Ok(
+                            new GameDetailsDto(
+                                game.Id,
+                                game.Name,
+                                game.GenreId,
+                                game.Price,
+                                game.ReleaseDate
+                            )
+                        );
                 }
             )
             .WithName(GetGameEndpointName);
@@ -79,7 +96,7 @@ public static class Gameendpoints
                 games[index] = new GameDto(
                     id,
                     updateGame.Name,
-                    updateGame.Genre,
+                    updateGame.GenreId,
                     updateGame.Price,
                     updateGame.ReleaseDate
                 );

@@ -1,3 +1,3 @@
 namespace _NET_PROJECT.Dtos;
 
-public record class GameDto(int Id, string Name, string Genre, decimal Price, DateOnly ReleaseDate);
+public record class GameDto(int Id, string Name, int GenreId, decimal Price, DateOnly ReleaseDate);
